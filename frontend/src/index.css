@@ -1,0 +1,137 @@
+@import "tailwindcss";
+
+/* ══════════════════════════════════════════
+   TEMA TAILWIND v4 — Casa Rosa
+══════════════════════════════════════════ */
+@theme {
+  /* Colores de marca */
+  --color-rosa:        #D6336C;
+  --color-rosa-vivo:   #F05A8C;
+  --color-rosa-claro:  #FBC4D6;
+  --color-rosa-niebla: #FDEEF3;
+
+  /* Burdeos sidebar */
+  --color-vino:        #3D1726;
+  --color-vino-2:      #52203A;
+  --color-vino-light:  #4A1B30;
+
+  /* Contenido */
+  --color-crema:       #EEF1F5;
+  --color-tinta:       #2B1620;
+  --color-gris:        #8A93A3;
+  --color-linea:       #E3E8EF;
+
+  /* Tipografía */
+  --font-fraunces: 'Fraunces', serif;
+  --font-outfit:   'Outfit', sans-serif;
+
+  /* Border radius */
+  --radius-card: 18px;
+}
+
+/* ══════════════════════════════════════════
+   VARIABLES CSS GLOBALES
+══════════════════════════════════════════ */
+:root {
+  --sombra: 0 16px 40px -22px #28324759;
+}
+
+/* ══════════════════════════════════════════
+   BASE
+══════════════════════════════════════════ */
+body {
+  margin: 0;
+  font-family: 'Outfit', system-ui, 'Segoe UI', sans-serif;
+  background-color: #EEF1F5;
+  -webkit-font-smoothing: antialiased;
+  color: #2B1620;
+}
+
+#root {
+  min-height: 100svh;
+}
+
+/* ══════════════════════════════════════════
+   SIDEBAR — fondo burdeos con gradiente
+══════════════════════════════════════════ */
+.sidebar-bg {
+  background:
+    radial-gradient(120% 60% at 50% -10%, #F05A8C59 0%, transparent 60%),
+    linear-gradient(170deg, #4A1B30 0%, #3D1726 55%, #2E1020 100%);
+}
+
+/* Grano de textura sutil */
+.sidebar-bg::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
+  pointer-events: none;
+}
+
+/* ══════════════════════════════════════════
+   ANIMACIONES
+══════════════════════════════════════════ */
+@keyframes slideIn {
+  from { transform: translateX(100%); opacity: 0; }
+  to   { transform: translateX(0);   opacity: 1; }
+}
+.animate-slide-in {
+  animation: slideIn 0.3s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(8px); }
+  to   { opacity: 1; transform: translateY(0);   }
+}
+.animate-fade-up {
+  animation: fadeUp 0.35s ease both;
+}
+
+/* Escalonado de tarjetas */
+.card-1 { animation: fadeUp 0.35s 0.05s ease both; }
+.card-2 { animation: fadeUp 0.35s 0.10s ease both; }
+.card-3 { animation: fadeUp 0.35s 0.15s ease both; }
+.card-4 { animation: fadeUp 0.35s 0.20s ease both; }
+
+/* Pulso suave para indicadores "EN VIVO" */
+@keyframes latir {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50%       { opacity: 0.6; transform: scale(1.3); }
+}
+.animate-latir {
+  animation: latir 1.5s ease-in-out infinite;
+}
+
+/* ══════════════════════════════════════════
+   UTILITARIOS
+══════════════════════════════════════════ */
+.backdrop-blur-xs {
+  backdrop-filter: blur(2px);
+}
+
+/* Sombra de tarjeta premium */
+.shadow-card {
+  box-shadow: var(--sombra);
+}
+
+/* Hover elevación en cards */
+.card-hover {
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+.card-hover:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 20px 48px -20px #28324766;
+}
+
+/* ══════════════════════════════════════════
+   PRINT
+══════════════════════════════════════════ */
+@media print {
+  body * { visibility: hidden; }
+  .print-visible, .print-visible * { visibility: visible; }
+  .print-visible { position: absolute; left: 0; top: 0; width: 100%; }
+  .no-print { display: none !important; }
+  button { display: none !important; }
+}

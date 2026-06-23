@@ -1,0 +1,719 @@
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;0,800;1,400;1,600;1,700&family=Inter:wght@300;400;500;600;700&display=swap');
+
+/* ─── Keyframes ───────────────────────────────────────────── */
+
+@keyframes gradientShift {
+  0%   { background-position: 0% 50%; }
+  50%  { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+@keyframes floatY {
+  0%, 100% { transform: translateY(0px); }
+  50%       { transform: translateY(-18px); }
+}
+
+@keyframes orbPulse {
+  0%, 100% { transform: scale(1);   opacity: 0.25; }
+  50%       { transform: scale(1.4); opacity: 0.5; }
+}
+
+@keyframes orbPulseReverse {
+  0%, 100% { transform: scale(1.3); opacity: 0.2; }
+  50%       { transform: scale(1);  opacity: 0.45; }
+}
+
+@keyframes rotateOrbit {
+  from { transform: rotate(0deg); }
+  to   { transform: rotate(360deg); }
+}
+
+@keyframes shimmerBtn {
+  0%   { left: -80%; }
+  100% { left: 160%; }
+}
+
+@keyframes petalFall {
+  0%   { transform: translateY(-120px) translateX(0)    rotate(0deg);   opacity: 0; }
+  8%   { opacity: 0.7; }
+  88%  { opacity: 0.4; }
+  100% { transform: translateY(110vh)  translateX(90px) rotate(520deg); opacity: 0; }
+}
+
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(40px); }
+  to   { opacity: 1; transform: translateY(0);    }
+}
+
+@keyframes fadeLeft {
+  from { opacity: 0; transform: translateX(-44px); }
+  to   { opacity: 1; transform: translateX(0);     }
+}
+
+@keyframes fadeRight {
+  from { opacity: 0; transform: translateX(44px); }
+  to   { opacity: 1; transform: translateX(0);    }
+}
+
+@keyframes scaleIn {
+  from { opacity: 0; transform: scale(0.82) translateY(24px); }
+  to   { opacity: 1; transform: scale(1)    translateY(0);    }
+}
+
+@keyframes heroReveal {
+  0%   { opacity: 0; transform: scale(0.5) rotate(-10deg); filter: blur(40px); }
+  65%  { opacity: 1; transform: scale(1.06) rotate(3deg);  filter: blur(0);    }
+  100% { opacity: 1; transform: scale(1)    rotate(0deg);  filter: blur(0);    }
+}
+
+@keyframes tagTypeIn {
+  from { opacity: 0; letter-spacing: -0.2em; filter: blur(8px); }
+  to   { opacity: 1; letter-spacing: 0.3em;  filter: blur(0);   }
+}
+
+@keyframes sparkle {
+  0%, 100% { opacity: 0; transform: scale(0) rotate(0deg);    }
+  50%       { opacity: 1; transform: scale(1) rotate(180deg);  }
+}
+
+@keyframes scrollBounce {
+  0%, 100% { transform: translateY(0);  opacity: 1;   }
+  50%       { transform: translateY(8px); opacity: 0.3; }
+}
+
+@keyframes glowPulse {
+  0%, 100% {
+    box-shadow:
+      0 0 30px rgba(244, 114, 182, 0.35),
+      0 0 70px rgba(244, 114, 182, 0.15),
+      0 0 120px rgba(159, 18, 57, 0.08);
+  }
+  50% {
+    box-shadow:
+      0 0 55px rgba(244, 114, 182, 0.55),
+      0 0 110px rgba(244, 114, 182, 0.28),
+      0 0 180px rgba(159, 18, 57, 0.14);
+  }
+}
+
+/* ─── Scroll-reveal system ────────────────────────────────── */
+
+[data-anim] {
+  opacity: 0;
+  will-change: opacity, transform;
+}
+
+[data-anim="fade-up"]    { transform: translateY(40px); }
+[data-anim="fade-left"]  { transform: translateX(-44px); }
+[data-anim="fade-right"] { transform: translateX(44px); }
+[data-anim="scale-in"]   { transform: scale(0.82) translateY(24px); }
+
+[data-anim].anim-visible {
+  animation-fill-mode: both;
+  animation-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+  animation-duration: 0.78s;
+  animation-delay: var(--anim-delay, 0ms);
+}
+
+[data-anim="fade-up"].anim-visible    { animation-name: fadeUp;    }
+[data-anim="fade-left"].anim-visible  { animation-name: fadeLeft;  }
+[data-anim="fade-right"].anim-visible { animation-name: fadeRight; }
+[data-anim="scale-in"].anim-visible   { animation-name: scaleIn;   }
+
+/* ─── Hero background ─────────────────────────────────────── */
+/*
+  Using a pseudo-element + transform:translate() instead of
+  background-position animation. transform is GPU-composited,
+  background-position is NOT — this fixes mobile flickering.
+*/
+.hero-gradient {
+  background: #120710;
+  overflow: hidden;
+}
+
+.hero-gradient::before {
+  content: '';
+  position: absolute;
+  /* 3x bigger than the container so movement doesn't expose edges */
+  width: 300%; height: 300%;
+  top: -100%; left: -100%;
+  background: linear-gradient(
+    -45deg,
+    #0f0509 0%, #1e0b14 15%, #370f22 30%,
+    #180710 45%, #2e1020 58%, #481330 72%,
+    #1a080d 86%, #0f0509 100%
+  );
+  animation: gradientMove 22s ease-in-out infinite alternate;
+  will-change: transform;
+  z-index: 0;
+  pointer-events: none;
+}
+
+@keyframes gradientMove {
+  0%   { transform: translate(0%,    0%);    }
+  25%  { transform: translate(-14%, -8%);    }
+  50%  { transform: translate(-22%,  6%);    }
+  75%  { transform: translate(-8%,  -16%);   }
+  100% { transform: translate(-18%,  10%);   }
+}
+
+/* ─── Orb blobs ───────────────────────────────────────────── */
+
+.orb {
+  border-radius: 50%;
+  pointer-events: none;
+  position: absolute;
+  z-index: 1;          /* above hero::before pseudo-element */
+  will-change: transform, opacity;
+}
+
+.orb-1 { animation: orbPulse 5s ease-in-out infinite; }
+.orb-2 { animation: orbPulseReverse 7s ease-in-out infinite; }
+.orb-3 { animation: orbPulse 9s ease-in-out 2s infinite; }
+
+/* ─── Hero logo ───────────────────────────────────────────── */
+
+.hero-logo-reveal {
+  animation: heroReveal 1.5s cubic-bezier(0.34, 1.46, 0.64, 1) 0.2s both;
+  will-change: transform, opacity, filter;
+}
+
+.logo-glow {
+  border-radius: 50%;
+  animation: glowPulse 4s ease-in-out infinite;
+  will-change: box-shadow;
+}
+
+.logo-float {
+  animation: floatY 7s ease-in-out infinite;
+  will-change: transform;
+}
+
+/* ─── Orbit rings ─────────────────────────────────────────── */
+
+.orbit-ring {
+  position: absolute;
+  border-radius: 50%;
+  animation-name: rotateOrbit;
+  animation-duration: 28s;
+  animation-timing-function: linear;
+  animation-iteration-count: infinite;
+  pointer-events: none;
+  will-change: transform;
+}
+
+/* ─── Hero text ───────────────────────────────────────────── */
+
+.hero-tag      { animation: tagTypeIn 1.4s cubic-bezier(0.4, 0, 0.2, 1) 0.9s  both; }
+.hero-title    { animation: fadeUp    1s   cubic-bezier(0.4, 0, 0.2, 1) 1.15s both; }
+.hero-subtitle { animation: fadeUp    1s   cubic-bezier(0.4, 0, 0.2, 1) 1.45s both; }
+.hero-cta      { animation: fadeUp    1s   cubic-bezier(0.4, 0, 0.2, 1) 1.75s both; }
+
+/* ─── Petals ──────────────────────────────────────────────── */
+
+.petal {
+  position: absolute;
+  pointer-events: none;
+  font-size: 1.15rem;
+  animation-name: petalFall;
+  animation-timing-function: linear;
+  animation-iteration-count: infinite;
+  animation-duration: 12s; /* Safe fallback to prevent 0s looping on mobile */
+  top: -80px;
+  user-select: none;
+  will-change: transform, opacity;
+}
+
+/* Mobile: show only first 3 petals to reduce load */
+@media (max-width: 767px) {
+  .petal-extra { display: none; }
+}
+
+/* ─── Shimmer button ──────────────────────────────────────── */
+
+.btn-glow {
+  position: relative;
+  overflow: hidden;
+}
+
+.btn-glow::before {
+  content: '';
+  position: absolute;
+  top: 0; bottom: 0;
+  left: -80%;
+  width: 45%;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(255, 255, 255, 0.22),
+    transparent
+  );
+  animation: shimmerBtn 2.8s infinite 2.2s;
+}
+
+/* ─── Gradient texts ──────────────────────────────────────── */
+
+.text-rose-gradient {
+  background: linear-gradient(120deg, #f472b6, #ec4899, #be185d, #9f1239, #ec4899, #f472b6);
+  background-size: 200% auto;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  animation: gradientShiftText 6s linear infinite;
+}
+
+@keyframes gradientShiftText {
+  0% { background-position: 0% center; }
+  100% { background-position: 200% center; }
+}
+
+/* ─── Section eyebrow ─────────────────────────────────────── */
+
+.eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 0.68rem;
+  font-weight: 700;
+  letter-spacing: 0.28em;
+  text-transform: uppercase;
+  color: #be185d;
+}
+
+.eyebrow::before,
+.eyebrow::after {
+  content: '';
+  display: block;
+  width: 28px;
+  height: 1px;
+  background: currentColor;
+  opacity: 0.45;
+}
+
+/* ─── Feature cards ───────────────────────────────────────── */
+
+.feature-card {
+  background: #ffffff;
+  border-radius: 1.5rem;
+  padding: 2rem 1.75rem;
+  border: 1px solid rgba(251, 207, 232, 0.55);
+  transition: all 0.42s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  position: relative;
+  overflow: hidden;
+}
+
+.feature-card::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(135deg, #fdf2f8 0%, #fff7fa 100%);
+  opacity: 0;
+  transition: opacity 0.42s ease;
+  border-radius: inherit;
+}
+
+.feature-card:hover {
+  transform: translateY(-12px) scale(1.015);
+  box-shadow:
+    0 32px 64px rgba(190, 24, 93, 0.13),
+    0 8px 20px rgba(190, 24, 93, 0.07);
+  border-color: rgba(244, 114, 182, 0.45);
+}
+
+.feature-card:hover::before { opacity: 1; }
+.feature-card > * { position: relative; z-index: 1; }
+
+.feature-icon {
+  width: 68px;
+  height: 68px;
+  border-radius: 1.1rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.9rem;
+  margin-bottom: 1.2rem;
+  transition: all 0.42s ease;
+  background: linear-gradient(135deg, #fce7f3, #fdf2f8);
+  flex-shrink: 0;
+}
+
+.feature-card:hover .feature-icon {
+  background: linear-gradient(135deg, #ec4899, #9f1239);
+  transform: scale(1.12) rotate(-6deg);
+}
+
+/* ─── Stat dividers ───────────────────────────────────────── */
+
+.stat-item + .stat-item::before {
+  content: '';
+  position: absolute;
+  left: 0; top: 22%; bottom: 22%;
+  width: 1px;
+  background: linear-gradient(
+    to bottom,
+    transparent,
+    rgba(244, 114, 182, 0.3),
+    transparent
+  );
+}
+
+.stat-item { position: relative; }
+
+/* ─── Info items ──────────────────────────────────────────── */
+
+.info-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 1rem;
+  padding: 1.1rem 1rem;
+  border-radius: 1rem;
+  transition: background 0.28s ease;
+}
+
+.info-item:hover { background: #fdf2f8; }
+
+.info-icon {
+  width: 44px;
+  height: 44px;
+  border-radius: 0.75rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.2rem;
+  flex-shrink: 0;
+  background: linear-gradient(135deg, #fce7f3, #fdf2f8);
+}
+
+/* ─── CTA section ─────────────────────────────────────────── */
+
+.cta-gradient {
+  background: linear-gradient(135deg, #430d26 0%, #6d1540 30%, #9f1239 62%, #5e1132 100%);
+}
+
+/* ─── Sparkles ────────────────────────────────────────────── */
+
+.sp1 { animation: sparkle 2.6s ease-in-out 0.0s infinite; }
+.sp2 { animation: sparkle 2.6s ease-in-out 0.9s infinite; }
+.sp3 { animation: sparkle 2.6s ease-in-out 1.8s infinite; }
+
+/* ─── Hamburger ───────────────────────────────────────────── */
+
+.ham-line {
+  display: block;
+  width: 22px;
+  height: 2px;
+  border-radius: 2px;
+  background: currentColor;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  transform-origin: center;
+}
+
+.ham-open .ham-line-1 { transform: translateY(8px) rotate(45deg); }
+.ham-open .ham-line-2 { opacity: 0; transform: scaleX(0); }
+.ham-open .ham-line-3 { transform: translateY(-8px) rotate(-45deg); }
+
+/* ─── Mobile menu ─────────────────────────────────────────── */
+
+.mobile-menu {
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.42s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
+
+.mobile-menu.open { max-height: 300px; }
+
+/* ─── Scroll indicator ────────────────────────────────────── */
+
+.scroll-dot { animation: scrollBounce 1.6s ease-in-out infinite; }
+
+/* ─── Chef container + image ──────────────────────────────── */
+
+/* Desktop: columna izquierda, alto completo */
+.chef-container {
+  top: 0;
+  bottom: 0;
+  left: clamp(12px, 2.5vw, 40px);
+  width: clamp(200px, 32vw, 460px);
+}
+
+.chef-img {
+  height: 95%;
+  width: auto;
+  object-fit: contain;
+  object-position: bottom center;
+  -webkit-mask-image: linear-gradient(
+    to right,
+    black 0%,
+    black 45%,
+    rgba(0,0,0,0.55) 65%,
+    rgba(0,0,0,0.15) 82%,
+    transparent 100%
+  );
+  mask-image: linear-gradient(
+    to right,
+    black 0%,
+    black 45%,
+    rgba(0,0,0,0.55) 65%,
+    rgba(0,0,0,0.15) 82%,
+    transparent 100%
+  );
+  filter: drop-shadow(0 0 40px rgba(159, 18, 57, 0.35));
+}
+
+/* Mobile: esquina inferior derecha, cara visible, fade a la izquierda */
+@media (max-width: 767px) {
+  .chef-container {
+    left: auto;
+    right: -8px;
+    top: auto;
+    bottom: 0;
+    width: 58vw;
+    height: 62%;
+  }
+
+  .chef-img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    object-position: bottom right;
+    opacity: 0.42;
+    filter: drop-shadow(0 0 20px rgba(159, 18, 57, 0.4));
+    -webkit-mask-image: linear-gradient(
+      to left,
+      black 0%,
+      black 50%,
+      rgba(0,0,0,0.4) 75%,
+      transparent 100%
+    );
+    mask-image: linear-gradient(
+      to left,
+      black 0%,
+      black 50%,
+      rgba(0,0,0,0.4) 75%,
+      transparent 100%
+    );
+  }
+}
+
+
+/* ─── Chef name badge ─────────────────────────────────────── */
+
+@keyframes badgeReveal {
+  from { opacity: 0; transform: translateY(16px) translateX(-8px); }
+  to   { opacity: 1; transform: translateY(0) translateX(0); }
+}
+
+.chef-badge {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  background: rgba(255, 255, 255, 0.07);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 16px;
+  padding: 12px 18px 12px 14px;
+  animation: badgeReveal 0.9s cubic-bezier(0.34, 1.46, 0.64, 1) 2s both;
+  cursor: default;
+}
+
+.chef-badge-icon {
+  width: 40px;
+  height: 40px;
+  background: linear-gradient(135deg, #ec4899, #9f1239);
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.2rem;
+  flex-shrink: 0;
+}
+
+/* ─── Footer ──────────────────────────────────────────────── */
+
+.footer-bg {
+  background: linear-gradient(180deg, #18080f 0%, #0e060a 100%);
+}
+
+/* ─── Hero content — truly centered over the full page ────── */
+
+/* Content sits centered across the full viewport width.
+   The chef (lower z-index, faded right edge) is purely decorative
+   behind it — no horizontal offset needed. */
+.hero-content-col {
+  padding-left:  1.5rem;
+  padding-right: 1.5rem;
+}
+
+/* ─── Mobile performance: cut expensive animations ───────── */
+/*
+   On phones the GPU struggles with:
+   - animated background-position (gradientShift)
+   - 6 falling petals (translateY + rotate, linear infinite)
+   - multiple simultaneous transform animations
+   Fix: static gradient, hide petals, stop orb scaling, simplify logo.
+*/
+/* Mobile: Disable expensive infinite animations to prevent loop bugs and improve performance */
+@media (max-width: 767px) {
+  /* Hide falling petals completely on mobile */
+  .petal {
+    display: none !important;
+    animation: none !important;
+  }
+
+  /* Hide orbit rings completely on mobile */
+  .orbit-ring {
+    display: none !important;
+    animation: none !important;
+  }
+
+  /* Disable heavy box-shadow pulse on the logo */
+  .logo-glow {
+    animation: none !important;
+    box-shadow: 0 0 30px rgba(244, 114, 182, 0.45) !important;
+  }
+
+  /* Disable logo float on mobile */
+  .logo-float {
+    animation: none !important;
+    transform: none !important;
+  }
+
+  /* Disable background pseudo-element gradient movement on mobile */
+  .hero-gradient::before {
+    animation: none !important;
+    transform: none !important;
+  }
+
+  /* Disable background orb pulses on mobile */
+  .orb {
+    animation: none !important;
+    transform: none !important;
+  }
+
+  /* Disable scroll dot bounce on mobile */
+  .scroll-dot {
+    animation: none !important;
+  }
+
+  /* Disable Te esperamos location pin animation on mobile */
+  .pin-float {
+    animation: none !important;
+  }
+
+  /* Disable sparkle petals/stars at the bottom on mobile */
+  .sp1, .sp2, .sp3 {
+    animation: none !important;
+  }
+
+  /* Disable entrance animations that might fail or stutter on mobile */
+  .hero-logo-reveal {
+    animation: none !important;
+  }
+}
+
+
+/* ─── Interactive Micro-animations ───────────────────────── */
+
+.nav-link-slide {
+  position: relative;
+}
+
+.nav-link-slide::after {
+  content: '';
+  position: absolute;
+  width: 0;
+  height: 2px;
+  bottom: -4px;
+  left: 0;
+  background-color: currentColor;
+  transition: width 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
+
+.nav-link-slide:hover::after {
+  width: 100%;
+}
+
+.btn-glow .arrow {
+  transition: transform 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
+
+.btn-glow:hover .arrow {
+  transform: translateX(4px);
+}
+
+header {
+  transition: background-color 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94),
+              backdrop-filter 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94),
+              box-shadow 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
+
+
+/* ─── ShowcaseProductos — transition keyframes ────────────── */
+
+/* EXIT: se aleja, encoge, rota y desvanece */
+@keyframes scExitLeft {
+  from { opacity: 1; transform: translateX(0)     scale(1)    rotate(0deg);  }
+  to   { opacity: 0; transform: translateX(-70px) scale(0.78) rotate(-8deg); }
+}
+@keyframes scExitRight {
+  from { opacity: 1; transform: translateX(0)    scale(1)    rotate(0deg); }
+  to   { opacity: 0; transform: translateX(70px) scale(0.78) rotate(8deg); }
+}
+
+/* ENTER: entra desde el costado con escala y rotación — easing con spring */
+@keyframes scEnterFromRight {
+  from { opacity: 0; transform: translateX(90px)  scale(0.70) rotate(10deg);  }
+  to   { opacity: 1; transform: translateX(0)     scale(1)    rotate(0deg);   }
+}
+@keyframes scEnterFromLeft {
+  from { opacity: 0; transform: translateX(-90px) scale(0.70) rotate(-10deg); }
+  to   { opacity: 1; transform: translateX(0)     scale(1)    rotate(0deg);   }
+}
+
+/* Clases aplicadas al contenedor del producto */
+.sc-exit-left   { animation: scExitLeft       0.42s ease-in                         forwards; }
+.sc-exit-right  { animation: scExitRight      0.42s ease-in                         forwards; }
+.sc-enter-right { animation: scEnterFromRight 0.62s cubic-bezier(0.34, 1.28, 0.64, 1) forwards; }
+.sc-enter-left  { animation: scEnterFromLeft  0.62s cubic-bezier(0.34, 1.28, 0.64, 1) forwards; }
+
+/* Floating emoji elements — duration/delay via CSS custom props set inline */
+.showcase-float {
+  animation: floatY var(--sf-dur, 3.5s) ease-in-out var(--sf-delay, 0s) infinite;
+}
+
+/* Product image bobbing */
+.showcase-product-img {
+  animation: floatY 4.5s ease-in-out infinite;
+}
+
+@media (max-width: 767px) {
+  /* Las transiciones de entrada/salida (.sc-*) se mantienen — son cortas y compuestas por GPU.
+     Solo se deshabilitan las animaciones infinitas que causan flicker. */
+  .showcase-float,
+  .showcase-product-img {
+    animation: none !important;
+    transform: none !important;
+  }
+
+  /* Reducir la distancia de translación en móvil */
+  @keyframes scExitLeft       { to { transform: translateX(-40px) scale(0.82) rotate(-6deg); opacity: 0; } }
+  @keyframes scExitRight      { to { transform: translateX(40px)  scale(0.82) rotate(6deg);  opacity: 0; } }
+  @keyframes scEnterFromRight { from { transform: translateX(55px)  scale(0.74) rotate(7deg);  opacity: 0; } }
+  @keyframes scEnterFromLeft  { from { transform: translateX(-55px) scale(0.74) rotate(-7deg); opacity: 0; } }
+
+  /* Disable expensive background gradient transitions on mobile */
+  .showcase-section {
+    transition: none !important;
+  }
+}
+
+/* ─── Reduced motion (accessibility) ─────────────────────── */
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
+    animation-delay: 0ms !important;
+  }
+}
