@@ -1,5 +1,5 @@
 # Dockerfile de producción para Casa Rosa ASGI
-FROM python:3.11-slim
+FROM python:3.12-slim
 
 # Evitar que Python escriba archivos .pyc y asegurar logs inmediatos
 ENV PYTHONDONTWRITEBYTECODE=1
