@@ -3,5 +3,8 @@
   "build": {
     "builder": "DOCKERFILE",
     "dockerfilePath": "backend/Dockerfile"
+  },
+  "deploy": {
+    "preDeployCommand": "python manage.py migrate"
   }
 }
