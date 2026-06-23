@@ -1,4 +1,4 @@
-# Usar imagen oficial ligera de Python
+# Dockerfile de producción para Casa Rosa ASGI
 FROM python:3.11-slim
 
 # Evitar que Python escriba archivos .pyc y asegurar logs inmediatos
