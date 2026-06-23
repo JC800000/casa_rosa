@@ -45,4 +45,5 @@ STORAGES = {
 }
 
 FRONTEND_URL = config('FRONTEND_URL', default='https://casarosa.online')
+MEDIA_URL = 'https://casarosa-production.up.railway.app/media/'
 
