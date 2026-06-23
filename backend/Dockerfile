@@ -9,11 +9,11 @@ ENV PYTHONUNBUFFERED=1
 WORKDIR /app
 
 # Instalar dependencias del proyecto
-COPY requirements.txt /app/
+COPY backend/requirements.txt /app/
 RUN pip install --no-cache-dir -r requirements.txt
 
 # Copiar el código del backend
-COPY . /app/
+COPY backend/ /app/
 
 # Crear directorios para estáticos y media
 RUN mkdir -p /app/staticfiles /app/media
