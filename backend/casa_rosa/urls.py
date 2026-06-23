@@ -1,8 +1,9 @@
 from django.contrib import admin
-from django.urls import path, include
+from django.urls import path, include, re_path
 from django.conf import settings
 from django.conf.urls.static import static
 from django.views.decorators.csrf import csrf_exempt
+from django.views.static import serve
 from strawberry.django.views import GraphQLView
 from schema import schema
 from productos.views import upload_foto_view
@@ -17,3 +18,8 @@ urlpatterns = [
     path('api/upload-foto-historia/', csrf_exempt(upload_foto_historia_view), name='upload_foto_historia'),
     path('api/upload-foto-showcase/', csrf_exempt(upload_foto_showcase_view), name='upload_foto_showcase'),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+
+urlpatterns += [
+    re_path(r'^media/(?P<path>.*)$', serve, {'document_root': settings.MEDIA_ROOT}),
+]
+
