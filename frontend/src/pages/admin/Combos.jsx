@@ -81,7 +81,8 @@ export default function Combos() {
       try {
         const fd = new FormData()
         fd.append('foto', archivoFoto)
-        const res = await fetch('/api/upload-foto/', { method: 'POST', body: fd })
+        const apiBase = import.meta.env.VITE_API_URL || ''
+        const res = await fetch(`${apiBase}/api/upload-foto/`, { method: 'POST', body: fd, credentials: 'include' })
         if (!res.ok) { notificar('Error al subir foto', 'err'); return }
         const d = await res.json()
         fotoPath = d.fotoPath

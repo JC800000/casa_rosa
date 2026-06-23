@@ -158,7 +158,8 @@ function ModalConfiguracion({ conf, onClose }) {
     setUploading(true)
     const fd = new FormData(); fd.append('foto', file)
     try {
-      const res = await fetch('/api/upload-foto/', { method: 'POST', body: fd })
+      const apiBase = import.meta.env.VITE_API_URL || ''
+      const res = await fetch(`${apiBase}/api/upload-foto/`, { method: 'POST', body: fd, credentials: 'include' })
       const data = await res.json()
       setUploading(false)
       if (data.success) { setQrUrl(data.fotoUrl); setForm(p => ({ ...p, _qrPath: data.fotoPath })) }

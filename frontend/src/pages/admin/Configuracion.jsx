@@ -171,7 +171,8 @@ function SeccionShowcase({ mostrarNotif }) {
     const fd = new FormData()
     fd.append('foto', archivo)
     try {
-      const res  = await fetch('/api/upload-foto-showcase/', { method: 'POST', body: fd })
+      const apiBase = import.meta.env.VITE_API_URL || ''
+      const res  = await fetch(`${apiBase}/api/upload-foto-showcase/`, { method: 'POST', body: fd, credentials: 'include' })
       const json = await res.json()
       if (json.url) {
         if (destino === 'nuevo') { setFotoNuevoUrl(json.url); setFotoNuevoPath(json.path) }
@@ -501,7 +502,8 @@ export default function Configuracion() {
     const fd = new FormData()
     fd.append('foto', archivo)
     try {
-      const res  = await fetch('/api/upload-foto-historia/', { method: 'POST', body: fd })
+      const apiBase = import.meta.env.VITE_API_URL || ''
+      const res  = await fetch(`${apiBase}/api/upload-foto-historia/`, { method: 'POST', body: fd, credentials: 'include' })
       const json = await res.json()
       if (json.url) {
         setFotoHistoriaUrl(json.url)

@@ -73,7 +73,8 @@ export default function Productos() {
     if (archivoFoto) {
       try {
         const fd = new FormData(); fd.append('foto', archivoFoto)
-        const res = await fetch('/api/upload-foto/', { method: 'POST', body: fd })
+        const apiBase = import.meta.env.VITE_API_URL || ''
+        const res = await fetch(`${apiBase}/api/upload-foto/`, { method: 'POST', body: fd, credentials: 'include' })
         if (!res.ok) { const err = await res.json(); mostrarNotif(err.error || 'Error al subir foto', 'err'); return }
         fotoPath = (await res.json()).fotoPath
       } catch { mostrarNotif('Error de conexión al subir foto', 'err'); return }
